@@ -3,43 +3,44 @@
 
 #include <stdio.h>
 
-int main(){
-    int N, M;   //  8 ~ 50
-    scanf("%d %d", &M, &N); // M : 행의 수, N : 열의 수
-
-    char board[50][51] = {0, }; // default: '0' == 공백
-    for(int i = 0; i < M; i++)  // 행 단위
-        scanf("%s", board[i]);  // 'W' | 'B' 입력받기
-    
-    char standard_color = board[0][0]; // 첫 번째 칸의 색
-
-    int total_count = 65;
-
-    for(int i = 0; i < M - 7; i++) {
-        for(int j = 0; j < N - 7; j++) {
-            int temp_count = 0;
-
-            // 내부 8*8이기에 짝/홀에 색 결정
-            for(int k = i; k < i + 8; k++) {
-                for(int l = j; l < j + 8; l++) {
-                    if((k + l) % 2 == 0)    // 짝수
-                    {  
-                        if(board[k][l] != standard_color)
-                            temp_count++;
-                    } 
-                    else                    // 홀수
-                    {    
-                        if(board[k][l] == standard_color)
-                            temp_count++;
-                    }
-                }
+int min_repaints(int x, int y, char board[50][50], char first_color) {
+    int repaints = 0;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            char expected_color = ((i + j) % 2 == 0) ? first_color : (first_color == 'W' ? 'B' : 'W');
+            if (board[x + i][y + j] != expected_color) {
+                repaints++;
             }
-
-            if(total_count > temp_count)
-                total_count = temp_count;
         }
     }
-    printf("%d", total_count);
+    return repaints;
+}
+
+int main(){
+    int N, M;
+    scanf("%d %d", &N, &M); // [N : row, M : column] 의 수
+
+    char board[50][50] = {0, };
+
+    for(int i = 0; i < N; i++)
+        scanf("%s", board[i]);
+    
+    int max_count = 64; // 8 * 8 체스판의 최대 칠해야 하는 칸의 수
+
+    for(int i = 0; i <= N - 8; i++)
+    {
+        for(int j = 0; j <= M - 8; j++)
+        {
+            int repaints_w = min_repaints(i, j, board, 'W');
+            int repaints_b = min_repaints(i, j, board, 'B');
+            int min_repaints_for_8x8 = (repaints_w < repaints_b) ? repaints_w : repaints_b;
+            if (min_repaints_for_8x8 < max_count)
+                max_count = min_repaints_for_8x8;
+        }
+    }
+
+    printf("%d", max_count);
 
     return 0;
+    
 }
