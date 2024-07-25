@@ -1,30 +1,43 @@
+// BoJ 1436
+// theme : brute force
+
 #include <stdio.h>
 
 int main(){
-    int deafult_value = 666;
-    int result = 0;
-
     int N;
     scanf("%d", &N);
-    N = N - 1;
 
-    int first_order = N / 19;
-    int second_order = N % 19;
+    int count = 0;
+    int standardNum = 666;
 
-    first_order *= 10000;
-    
-    if(6 < second_order && second_order < 17)
+    while(1)
     {
-        second_order = second_order;
-        deafult_value *= 10;
+        int consecutiveSix = 0;
+        int cur = standardNum;
+        while(cur > 0)
+        {
+            int digit = cur % 10;
+
+            if(digit==6)
+                consecutiveSix ++;
+            else
+                consecutiveSix = 0;
+            
+            if(consecutiveSix == 3)
+            {
+                count++;
+                break;
+            }
+            cur = cur/10;
+        }
+
+        if(count==N)
+            break;
+
+        standardNum++;
     }
     
-    else
-        second_order *= 1000;
-
-    result = first_order + second_order + deafult_value;
-    
-    printf("%d", result);
+    printf("%d", standardNum);
 
     return 0;
 }
