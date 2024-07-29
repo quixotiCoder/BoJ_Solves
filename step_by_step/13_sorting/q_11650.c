@@ -29,8 +29,6 @@ int compare(const void *a, const void *b)
     return -1;
 }
 
-
-
 int main(){
     int N;
     scanf("%d", &N);
